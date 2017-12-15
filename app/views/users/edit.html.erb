@@ -1,0 +1,21 @@
+<a href="/events">Event Dashboard</a> | 
+<a href="/sessions/logout">Logout</a>
+
+<h2>Edit Your Profile</h2>
+<form action="/users/edit" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    First Name:
+    <input type="text" name="user[first_name]" value="<%= current_user.first_name %>"><br>
+    Last Name:
+    <input type="text" name="user[last_name]" value="<%= current_user.last_name %>"><br>
+    Email:
+    <input type="text" name="user[email]" value="<%= current_user.email %>"><br>
+    Location:
+    <input type="text" name="user[city]" value="<%= current_user.city %>">
+    <select name="user[state]" value="<%= current_user.state %>">
+        <option value="CA">CA</option>
+        <option value="WA">WA</option>
+        <option value="NY">NY</option>
+    </select><br>
+    <input type="submit" value="Update Records">
+</form>

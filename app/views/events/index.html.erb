@@ -1,9 +1,8 @@
 <h2>Welcome, <%= @current_user.first_name %></h2>
+<a href="/users/edit">Edit My Profile</a> | 
+<a href="/sessions/logout">Logout</a>
 
 <h4>Here are some of the events at your state:</h4>
-<% @events.each {|event| %>
-<%= event.name %>
-<% } %>
 <table class="table">
     <thead>
         <tr>
@@ -15,27 +14,90 @@
         </tr>
     </thead>
     <tbody>
-
+        <% @events_in_state.each {|event| %>
+            <tr>
+                <td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+                <td><%= event.date %></td>
+                <td><%= event.city %></td>
+                <td><%= event.user.first_name %></td>
+                <td>
+                    <% if event.user == current_user %>
+                        <form action="/events/destroy" method="post">
+                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                            <input type="hidden" name="event" value="<%= event.id %>">
+                            <input type="submit" value="Delete">
+                        </form>
+                    <% elsif !event.attendees.find_by(id: current_user.id) %>
+                        <form action="/events/join" method="post">
+                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                            <input type="hidden" name="event" value="<%= event.id %>">
+                            <input type="submit" value="Join">
+                        </form>
+                    <% else %>
+                        <form action="/events/unjoin" method="post">
+                            Joining
+                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                            <input type="hidden" name="event" value="<%= event.id %>">
+                            <input type="submit" value="Cancel">
+                        </form>
+                    <% end %>
+                </td>
+            </tr>
+        <% } %>
     </tbody>
 </table>
 
 <h4>Here are some of the events on other states:</h4>
 <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>State</th>
-                <th>Host</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-    
-        </tbody>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>State</th>
+            <th>Host</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+            <% @events_out_state.each {|event| %>
+                <tr>
+                    <td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+                    <td><%= event.date %></td>
+                    <td><%= event.city %></td>
+                    <td><%= event.state %></td>
+                    <td><%= event.user.first_name %></td>
+                    <td>
+                        <% if event.user == current_user %>
+                            <form action="/events/destroy" method="post">
+                                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                <input type="hidden" name="event" value="<%= event.id %>">
+                                <input type="submit" value="Delete">
+                            </form>
+                        <% elsif !event.attendees.find_by(id: current_user.id) %>
+                            <form action="/events/join" method="post">
+                                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                <input type="hidden" name="event" value="<%= event.id %>">
+                                <input type="submit" value="Join">
+                            </form>
+                        <% else %>
+                            <form action="/events/unjoin" method="post">
+                                Joining
+                                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                <input type="hidden" name="event" value="<%= event.id %>">
+                                <input type="submit" value="Cancel">
+                            </form>
+                        <% end %>
+                    </td>
+                </tr>
+            <% } %>
+    </tbody>
 </table>
-
+<% if flash[:errors] %>
+    <% flash[:errors].each {|message| %>
+        <p><%= message %></p>
+    <% } %> 
+<% end %>
 <h3>Add Event</h3>
 <form action="/events" method="post">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
@@ -50,5 +112,5 @@
         <option value="WA">WA</option>
         <option value="NY">NY</option>
     </select><br>
-    <input type="submit" value="Register">
+    <input type="submit" value="Add Event">
 </form>

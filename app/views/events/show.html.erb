@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-6">
+        <h2><%= @event.name %></h2><br>
+        <h4><%= @event.user.first_name %> <%= @event.user.last_name %></h4>
+        <h4><%= @event.date %></h4>
+        <h4><%= @event.city %> <%= @event.state %></h4><br>
+        <h4>Number of people who are joining the event: </h4>
+        <h4>Attendees:</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @event.attendees.each { |attendee|  %>
+                    <tr>
+                    <td><%= attendee.first_name %></td>
+                    <td><%= attendee.city %></td>
+                    <td><%= attendee.state %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <a href="/events">Event Dashboard</a> | 
+        <a href="/sessions/logout">Logout</a>
+    </div>
+</div>

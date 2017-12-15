@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+
+    skip_before_action :require_login, only: [:index]
+
     def index
         render "index"
     end
@@ -9,6 +12,18 @@ class UsersController < ApplicationController
         else
             flash[:errors] = @user.errors.full_messages
             redirect_to "/"
+        end
+    end
+    def edit
+        render 'edit'
+    end
+    def update
+        current_user.update(user_params)
+        if current_user.save
+            redirect_to "/events"
+        else
+            flash[:errors] = @user.errors.full_messages
+            redirect_to "/events"
         end
     end
 
