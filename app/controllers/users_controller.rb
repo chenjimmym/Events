@@ -1,15 +1,18 @@
 class UsersController < ApplicationController
 
-    skip_before_action :require_login, only: [:index]
+    skip_before_action :require_login, only: [:index, :create]
 
     def index
+        puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
         render "index"
     end
     def create
+        puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
         @user = User.new(user_params)
         if @user.save
             redirect_to "/"
         else
+            puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             flash[:errors] = @user.errors.full_messages
             redirect_to "/"
         end
@@ -18,12 +21,13 @@ class UsersController < ApplicationController
         render 'edit'
     end
     def update
-        current_user.update(user_params)
-        if current_user.save
+        # current_user.update(user_params)
+        @user = current_user
+        if @user.update(user_params)
             redirect_to "/events"
         else
             flash[:errors] = @user.errors.full_messages
-            redirect_to "/events"
+            redirect_to "/users/edit"
         end
     end
 

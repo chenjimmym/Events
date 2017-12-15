@@ -1,4 +1,8 @@
-
+<% if flash[:errors] %>
+<% flash[:errors].each {|message| %>
+    <p><%= message %></p>
+<% } %> 
+<% end %>
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-5">
